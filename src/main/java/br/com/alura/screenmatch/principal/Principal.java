@@ -1,12 +1,17 @@
 package br.com.alura.screenmatch.principal;
 
 import br.com.alura.screenmatch.model.*;
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
+    
+    private SerieRepository repositorio;
 
     List<Serie> series = new ArrayList<>();
 
@@ -18,6 +23,10 @@ public class Principal {
 
     private Scanner leitor = new Scanner(System.in);
     boolean rodarMenu = true;
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void exibeMenu() {
 
@@ -63,6 +72,7 @@ public class Principal {
 
     private void listarSeriesBuscadas() {
 
+        series = repositorio.findAll();
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
@@ -71,11 +81,9 @@ public class Principal {
     private void buscarSerieWeb() {
 
         DadosSerie dados = getDadosSerie();
-
         Serie serie = new Serie(dados);
-
         series.add(serie);
-
+        repositorio.save(serie);
         System.out.println(serie);
     }
 
