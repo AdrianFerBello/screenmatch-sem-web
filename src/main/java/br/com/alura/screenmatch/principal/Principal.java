@@ -102,26 +102,60 @@ public class Principal {
 
     private void buscarEpisodioPorSerie() {
 
-        DadosSerie dadosSerie = getDadosSerie();
+        listarSeriesBuscadas();
 
-        List<DadosTemporada> temporadas = new ArrayList<>();
+        System.out.println("Digite uma serie pelo nome: ");
+        var nomeSerie = leitor.nextLine();
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
+        Optional<Serie> serie = series.stream()
+                .filter(s -> s.getTitulo().toLowerCase()
+                        .contains(nomeSerie.toLowerCase()))
+                .findFirst();
 
-            var json = consumoApi.obterDados(
-                    ENDERECO
-                            + dadosSerie.titulo().replace(" ", "+")
-                            + "&season="
-                            + i
-                            + API_KEY
-            );
+        if (serie.isPresent()) {
 
-            DadosTemporada dadosTemporada =
-                    conversor.obterDados(json, DadosTemporada.class);
+            var serieEncontrada = serie.get();
 
-            temporadas.add(dadosTemporada);
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+
+                var json = consumoApi.obterDados(
+                        ENDERECO
+                                + serieEncontrada.getTitulo().replace(" ", "+")
+                                + "&season="
+                                + i
+                                + API_KEY
+                );
+
+                DadosTemporada dadosTemporada =
+                        conversor.obterDados(json, DadosTemporada.class);
+
+                temporadas.add(dadosTemporada);
+            }
+
+            temporadas.forEach(System.out::println);
+
+            // Criando e adicionando os episódios à série
+            temporadas.forEach(temporada -> {
+
+                temporada.episodios().forEach(dadosEpisodio -> {
+
+                    Episodio episodio = new Episodio(
+                            temporada.numero(),
+                            dadosEpisodio
+                    );
+
+                    serieEncontrada.adicionarEpisodio(episodio);
+                });
+            });
+
+            // Salva a série e, por causa do CascadeType.ALL,
+            // salva os episódios também
+            repositorio.save(serieEncontrada);
+
+        } else {
+            System.out.println("Serie não encontrada no banco de dados!!");
         }
-
-        temporadas.forEach(System.out::println);
     }
 }

@@ -28,7 +28,7 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @Transient //nao tenho persistencia de dados
+    @OneToMany(mappedBy = "serie" , cascade = CascadeType.ALL , fetch = FetchType.EAGER) //uma serie tem muitos episodios
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(){}
@@ -42,6 +42,14 @@ public class Serie {
         this.poster = dadosSerie.poster();
         this.sinopse = ConsultaMyMemory.obterTraducao(dadosSerie.sinopse()).trim();
         //this.sinopse = ConsultaChatGPT.obterTraducao(dadosSerie.sinopse()).trim();
+    }
+
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
     }
 
     public Long getId() {
@@ -106,6 +114,11 @@ public class Serie {
 
     public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
+    }
+
+    public void adicionarEpisodio(Episodio episodio) {
+        episodio.setSerie(this);
+        this.episodios.add(episodio);
     }
 
     @Override
