@@ -1,12 +1,7 @@
 package br.com.alura.screenmatch.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ManyToAny;
-import org.springframework.cglib.core.Local;
-import org.springframework.core.style.ToStringCreator;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 

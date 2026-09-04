@@ -36,6 +36,11 @@ public class Principal {
                     1 - Buscar séries
                     2 - Buscar episódios
                     3 - Listar series buscadas
+                    4 - Buscar serie por titulo
+                    5 - Buscar serie por autor
+                    6 - Buscar Top 5 series
+                    7 - Buscar por categoria
+                    8 - Buscar Series por temporada e avaliação
                     
                     0 - Sair
                     """;
@@ -59,6 +64,22 @@ public class Principal {
                     listarSeriesBuscadas();
                     break;
 
+                case 4:
+                    buscarSeriePorTitulo();
+                    break;
+
+                case 5:
+                    buscarSeriePorAutor();
+                    break;
+                case 6:
+                    buscarTop5Series();
+                    break;
+                case 7:
+                    buscarPorCategoria();
+                    break;
+                case 8:
+                    buscarSeriePortemporadaEAvalicao();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     rodarMenu = false;
@@ -68,6 +89,47 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void buscarSeriePortemporadaEAvalicao() {
+        System.out.println("Digite um total de temporadas para buscar as series: ");
+        var totalTemporadas = leitor.nextInt();
+
+        System.out.println("Digite uma avaliação");
+        var avaliacao = leitor.nextDouble();
+
+        List<Serie> series = repositorio.findByTotalTemporadasAndAvaliacaoGreaterThanEqual(totalTemporadas, avaliacao);
+
+        System.out.println("Series com " +totalTemporadas+ " temporadas com avaliaçao maior que " +avaliacao);
+        series.forEach(s -> System.out.println(s.getTitulo()));
+    }
+
+    private void buscarPorCategoria() {
+        System.out.println("Digite uma categoria: ");
+        var categoriaDigitada = leitor.nextLine();
+        Categoria categoria = Categoria.fromPortugues(categoriaDigitada);
+
+        List<Serie> seriesCategoria = repositorio.findByGenero(categoria);
+
+        seriesCategoria.forEach(s -> System.out.println(s.getTitulo() + "Categoria: " +s.getGenero()+ ", Avaliação: " +s.getAvaliacao()));
+    }
+
+    private void buscarTop5Series() {
+        List<Serie> top5Series = repositorio.findTop5ByOrderByAvaliacaoDesc();
+        top5Series.forEach(s -> System.out.println(s.getTitulo()  + ", Avalicao: " + s.getAvaliacao()));
+    }
+
+    private void buscarSeriePorAutor() {
+        System.out.println("Digite o nome do autor: ");
+        var nomeAutor = leitor.nextLine();
+        System.out.println("Digite uma avaliação: ");
+        var avaliacao = leitor.nextDouble();
+
+        List<Serie> series = repositorio.findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAutor, avaliacao);
+
+        System.out.println("Series em que o autor " +nomeAutor+ " trabalho");
+        series.forEach(s -> System.out.println(s.getTitulo() + ", Avaliação: " +s.getAvaliacao()));
+
     }
 
     private void listarSeriesBuscadas() {
@@ -107,10 +169,7 @@ public class Principal {
         System.out.println("Digite uma serie pelo nome: ");
         var nomeSerie = leitor.nextLine();
 
-        Optional<Serie> serie = series.stream()
-                .filter(s -> s.getTitulo().toLowerCase()
-                        .contains(nomeSerie.toLowerCase()))
-                .findFirst();
+        Optional<Serie> serie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serie.isPresent()) {
 
@@ -157,5 +216,16 @@ public class Principal {
         } else {
             System.out.println("Serie não encontrada no banco de dados!!");
         }
+    }
+
+    private void buscarSeriePorTitulo() {
+        System.out.println("Digite uma serie pelo nome: ");
+        var nomeBuscado = leitor.nextLine();
+
+        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeBuscado);
+
+        if(serieBuscada.isPresent()){
+            System.out.println("Dados series: " + serieBuscada.get());
+        }else System.out.println("Serie não presente no banco de dados;");
     }
 }

@@ -1,6 +1,5 @@
 package br.com.alura.screenmatch.model;
 
-import br.com.alura.screenmatch.service.ConsultaChatGPT;
 import br.com.alura.screenmatch.service.ConsultaMyMemory;
 import jakarta.persistence.*;
 
@@ -124,13 +123,13 @@ public class Serie {
     @Override
     public String toString() {
         return "Serie{" +
-                " Genero=" + genero +
-                " , Titulo='" + titulo + '\'' +
+                "Genero=" + genero +
+                ", Titulo='" + titulo + '\'' +
                 ", TotalTemporadas=" + totalTemporadas +
                 ", Avaliacao=" + avaliacao +
                 ", Atores='" + atores + '\'' +
                 ", Poster='" + poster + '\'' +
                 ", Sinopse='" + sinopse + '\'' +
-                '}';
+                ", Episodios='" + episodios + '\'';
     }
 }
