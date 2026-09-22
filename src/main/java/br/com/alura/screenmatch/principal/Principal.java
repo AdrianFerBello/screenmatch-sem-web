@@ -20,7 +20,7 @@ public class Principal {
     ConverteDados conversor = new ConverteDados();
     ConsumoApi consumoApi = new ConsumoApi();
 
-    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+        private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=6fedcde0";
 
     private Scanner leitor = new Scanner(System.in);
@@ -35,6 +35,8 @@ public class Principal {
         while (rodarMenu) {
 
             var menu = """
+                    ************ SCREENMATCH ************
+                    
                     1 - Buscar séries
                     2 - Buscar episódios
                     3 - Listar series buscadas
@@ -48,6 +50,8 @@ public class Principal {
                     11 - Buscar episodios depois de um Ano de Lançamento
                     
                     0 - Sair
+                    
+                    Digite uma opção: 
                     """;
 
             System.out.println(menu);
