@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.repository;
 
+import br.com.alura.screenmatch.dto.SerieDTO;
 import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
@@ -29,4 +30,6 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     @Query("SELECT e FROM series s JOIN s.episodios e WHERE s = :serie AND YEAR (e.dataLancamento) >= :anoEpisodios")
     List<Episodio> topEpisodiosPorSerieAno(Serie serie, int anoEpisodios);
+
+    List<Serie> findTop5ByOrderByEpisodiosDataLancamentoDesc();
 }
