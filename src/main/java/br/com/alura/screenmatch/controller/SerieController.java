@@ -1,11 +1,10 @@
 package br.com.alura.screenmatch.controller;
 
+import br.com.alura.screenmatch.dto.EpisodioDTO;
 import br.com.alura.screenmatch.dto.SerieDTO;
 import br.com.alura.screenmatch.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,15 @@ public class SerieController {
     @GetMapping("/lancamentos")
     public List<SerieDTO> obterLancamento(){
         return serieService.retornaLancamento();
+    }
+
+    @GetMapping("{id}")
+    public SerieDTO obterPorId(@PathVariable Long id){
+        return serieService.retornaSeriePorId(id);
+    }
+
+    @GetMapping("{id}/temporadas/todas")
+    public List<EpisodioDTO> obterEpisodios(@PathVariable Long id){
+        return serieService.obterTodasTemporadas(id);
     }
 }
